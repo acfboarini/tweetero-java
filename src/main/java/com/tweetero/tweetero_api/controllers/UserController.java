@@ -21,8 +21,9 @@ public class UserController {
     private UserRepository userRepository;
 
     @PostMapping
-    public void postUser(@RequestBody UserDTO req) {
+    public String postUser(@RequestBody UserDTO req) {
         userRepository.save(new User(req));
+        return "OK";
     }
 
     @GetMapping
