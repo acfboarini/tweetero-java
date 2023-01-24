@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.tweetero.tweetero_api.dto.TweetDTO;
 import com.tweetero.tweetero_api.models.Tweet;
+import com.tweetero.tweetero_api.models.FormatedTweet;
 import com.tweetero.tweetero_api.repositories.TweetRepository;
 
 @Service
@@ -16,16 +17,25 @@ public class TweetService {
     
     @Autowired
     private TweetRepository tweetRepository;
-    private int tweetsByPage = 5;
+    private UserService userService;
+    private int size = 5;
 
-    public String postTweet(TweetDTO text, String username) {
-        Tweet tweet = new Tweet(text, username);
-        tweetRepository.save(tweet);
-        return "OK";
+    public TweetService(UserService userService) {
+        this.userService = userService;
     }
 
-    public List<Tweet> getTweetsWithPagination(int page) {
-        return tweetRepository.findAll();
+    public String postTweet(TweetDTO text, String username) {
+        if (userService.existUsername(username)) {
+            Tweet tweet = new Tweet(text, username);
+            tweetRepository.save(tweet);
+            return "OK";
+        }
+        return "Este Username não esta registrado no sistema";
+    }
+
+    public List<FormatedTweet> getTweetsWithPagination(int page) {
+        List<Tweet> tweets = tweetRepository.findAll();
+        return formatTweets(tweets);
     }
 
     public List<Tweet> getTweetsByUsername(String username) {
@@ -41,5 +51,19 @@ public class TweetService {
             }
         });
         return filteredTweets;
+    }
+
+    public List<FormatedTweet> formatTweets(List<Tweet> tweets) {
+        List<FormatedTweet> formatedTweets = new ArrayList<>();
+        tweets.forEach(tweet -> {
+            FormatedTweet formatedTweet = this.buildTweetFormat(tweet);
+            formatedTweets.add(formatedTweet);
+        });
+        return formatedTweets;
+    }
+    
+    public FormatedTweet buildTweetFormat(Tweet tweet) {
+        String avatar = userService.findAvatarByUsername(tweet.getUsername());
+        return new FormatedTweet(tweet, avatar);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tweetero.tweetero_api.dto.TweetDTO;
+import com.tweetero.tweetero_api.models.FormatedTweet;
 import com.tweetero.tweetero_api.models.Tweet;
 import com.tweetero.tweetero_api.services.TweetService;
 
@@ -30,7 +31,7 @@ public class TweetController {
     }
 
     @GetMapping
-    public List<Tweet> getTweets(@RequestParam(value = "page") int page) {
+    public List<FormatedTweet> getTweets(@RequestParam(value = "page") int page) {
         return tweetService.getTweetsWithPagination(page);
     }
 
