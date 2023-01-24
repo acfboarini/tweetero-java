@@ -25,8 +25,8 @@ public class Tweet {
     @Column(length = 500, nullable = false)
     private String text;
 
-    public Tweet(TweetDTO data) {
-        this.username = data.username();
+    public Tweet(TweetDTO data, String username) {
         this.text = data.text();
+        this.username = username;
     }
 }

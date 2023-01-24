@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tweetero.tweetero_api.dto.TweetDTO;
 import com.tweetero.tweetero_api.models.Tweet;
 import com.tweetero.tweetero_api.repositories.TweetRepository;
 
@@ -17,12 +18,13 @@ public class TweetService {
     private TweetRepository tweetRepository;
     private int tweetsByPage = 5;
 
-    public String postTweet(Tweet req) {
-        tweetRepository.save(req);
+    public String postTweet(TweetDTO text, String username) {
+        Tweet tweet = new Tweet(text, username);
+        tweetRepository.save(tweet);
         return "OK";
     }
 
-    public List<Tweet> getTweets(int page) {
+    public List<Tweet> getTweetsWithPagination(int page) {
         return tweetRepository.findAll();
     }
 
