@@ -18,10 +18,11 @@ public class TweetService {
     @Autowired
     private TweetRepository tweetRepository;
     private UserService userService;
-    private int size = 5;
+    private int size;
 
     public TweetService(UserService userService) {
         this.userService = userService;
+        this.size = 2;
     }
 
     public String postTweet(TweetDTO text, String username) {
@@ -35,7 +36,7 @@ public class TweetService {
 
     public List<FormatedTweet> getTweetsWithPagination(int page) {
         List<Tweet> tweets = tweetRepository.findAll();
-        return formatTweets(tweets);
+        return formatTweets(tweets, page);
     }
 
     public List<Tweet> getTweetsByUsername(String username) {
@@ -53,13 +54,30 @@ public class TweetService {
         return filteredTweets;
     }
 
-    public List<FormatedTweet> formatTweets(List<Tweet> tweets) {
+    public List<FormatedTweet> formatTweets(List<Tweet> tweets, int page) {
         List<FormatedTweet> formatedTweets = new ArrayList<>();
-        tweets.forEach(tweet -> {
-            FormatedTweet formatedTweet = this.buildTweetFormat(tweet);
-            formatedTweets.add(formatedTweet);
-        });
+        int firstIndex = calculateFirstIndex(tweets.size(), page);
+	    int lastIndex = calculateLastIndex(firstIndex);
+
+        for (int i = firstIndex; i > lastIndex; i--) {
+            if (tweets.get(i) != null) {
+                FormatedTweet tweet = buildTweetFormat(tweets.get(i));
+                formatedTweets.add(tweet);
+            }
+        }
         return formatedTweets;
+    }
+
+    public int calculateFirstIndex(int tweetsLength, int page) {
+        return tweetsLength - 1 - this.size * (page - 1);
+    }
+    
+    public int calculateLastIndex(int firstIndex) {
+        int lastIndex = firstIndex - this.size;
+        if (lastIndex < -1) {
+            lastIndex = -1;
+        }
+        return lastIndex;
     }
     
     public FormatedTweet buildTweetFormat(Tweet tweet) {
