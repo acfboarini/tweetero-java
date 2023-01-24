@@ -3,6 +3,7 @@ package com.tweetero.tweetero_api.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +26,12 @@ public class TweetController {
     private TweetService tweetService;
 
     @PostMapping
-    public String postTweet(@RequestBody TweetDTO text, @RequestHeader(value = "user") String username) {
-        tweetService.postTweet(text, username);
-        return "OK";
+    public ResponseEntity<Object> postTweet(@RequestBody TweetDTO text, @RequestHeader(value = "user") String username) {
+        String status = tweetService.postTweet(text, username);
+        if ("Erro".equals(status)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(null);
     }
 
     @GetMapping

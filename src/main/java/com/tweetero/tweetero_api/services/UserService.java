@@ -15,8 +15,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void postUser(User req) {
+    public String postUser(User req) {
+        if (this.existUsername(req.getUsername())) {
+            return "Erro";
+        }
         userRepository.save(req);
+        return "OK";
     }
 
     public List<User> getUsers() {
