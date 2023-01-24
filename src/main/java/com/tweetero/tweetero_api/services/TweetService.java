@@ -31,7 +31,7 @@ public class TweetService {
             tweetRepository.save(tweet);
             return "OK";
         }
-        return "Este Username não esta registrado no sistema";
+        return "Erro";
     }
 
     public List<FormatedTweet> getTweetsWithPagination(int page) {

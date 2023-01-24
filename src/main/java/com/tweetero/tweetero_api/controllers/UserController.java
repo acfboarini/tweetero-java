@@ -3,6 +3,7 @@ package com.tweetero.tweetero_api.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,8 +22,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public void postUser(@RequestBody UserDTO req) {
-        userService.postUser(new User(req));
+    public HttpStatus postUser(@RequestBody UserDTO req) {
+        String status = userService.postUser(new User(req));
+        if ("Erro".equals(status)) {
+            return HttpStatus.CONFLICT;
+        }
+        return HttpStatus.CREATED;
     }
 
     @GetMapping
