@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tweetero.tweetero_api.dto.UserDTO;
 import com.tweetero.tweetero_api.models.User;
-import com.tweetero.tweetero_api.repositories.UserRepository;
+import com.tweetero.tweetero_api.services.UserService;
 
 @RestController
 @RequestMapping("/sign-up")
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @PostMapping
     public void postUser(@RequestBody UserDTO req) {
-        userRepository.save(new User(req));
+        userService.postUser(new User(req));
     }
 
     @GetMapping
     public List<User> getUsers() {
-        return userRepository.findAll();
+        return userService.getUsers();
     }
 }
