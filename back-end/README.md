@@ -1,8 +1,3 @@
-# tweetero-java
-
-## sobre
-copia basica do twitter usando java
-
 ## como rodar em desenvolvimento
 1. clone o repositorio
 
